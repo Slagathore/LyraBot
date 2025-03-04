@@ -1,0 +1,118 @@
+[project]
+name = "lyra"
+version = "0.1.0"
+description = "A self-improving AI with recursive learning and modular tool integration"
+readme = "README.md"
+authors = [
+
+    {name = "Cole",email = "charcham7@gmail.com"}
+]
+requires-python = ">=3.10,<3.11"
+dependencies = [
+    "rasa[full] (>=3.6.21,<4.0.0)",
+    # OpenAI API integration
+    "openai",
+
+    # High-level orchestration & chaining
+    "langchain",
+
+    # ORM and SQL database access
+    "sqlalchemy",
+    "sqlalchemy-utils",
+
+    # Vector search libraries
+    "faiss-cpu",
+
+    # NLP and ML libraries
+    "transformers",
+    "spacy",
+    "nltk",
+    "scikit-learn",
+    "pandas",
+    "numpy",  # Often installed as a dependency; explicitly including for clarity.
+    "sentencepiece",
+
+    # Deep learning frameworks (if needed)
+    "torch",          # PyTorch; use if you plan to train custom models.
+    "tensorflow",     # Optional if you plan to use TensorFlow-based models.
+
+    # Web frameworks and async HTTP
+    "fastapi",
+    "uvicorn",
+    "httpx",
+
+    # Asynchronous SQLite (if needed for async DB access)
+    "aiosqlite",
+
+    # Caching and NoSQL support
+    "redis",
+    "pymongo[srv,tls]",
+
+    # API clients for external services (AWS, Google)
+    "boto3",
+    "google-auth",
+    "google-api-python-client",
+
+    # Text-to-speech, Speech Recognition, Audio Processing
+    "pyttsx3",        # Offline text-to-speech engine.
+    "SpeechRecognition",
+    "pyaudio",
+    "pydub",
+
+    # Logging, CLI and utilities
+    "rich",
+    "colorama",
+    "termcolor",
+    "click",
+    "fire",
+    "loguru",
+    "psutil",
+
+    # Data visualization and interactive notebooks
+    "matplotlib",
+    "plotly",
+    "jupyter",
+    "ipython",
+
+    # Code quality and development tools (optional but useful)
+    "black",
+    "isort",
+    "flake8",
+    "pytest",
+    "pylint",
+    "mypy",
+
+    # Environment management and configuration
+    "python-dotenv",
+
+    # Task scheduling and retry mechanisms
+    "schedule",
+    "tenacity",
+
+    # File and OS utilities
+    "watchdog",
+    "gitpython",
+    "python-magic",
+    "toml",
+
+    # Fun/interesting extras
+    "pyfiglet",       # For ASCII art in CLI.
+    "emoji",          # For adding emojis to output.
+    "faker",          # For generating fake data.
+    "confection",     # For playful data generation, if needed.
+    "langcodes",      # For language detection and processing.
+    
+    # Additional utilities for agents and chaining
+    "cachetools",
+    "databases",      # Async database access (if you plan on using async frameworks)
+]
+
+[[tool.poetry.packages]]
+include = "lyra"
+from = "src"
+
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
