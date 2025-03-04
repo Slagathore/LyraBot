@@ -3,7 +3,7 @@ import os
 
 def commit_and_push(repo_dir: str, commit_message: str) -> None:
     """
-    Adds all changes in the repo, commits with the provided message, and pushes to the remote repository.
+    Adds all changes in the repo, commits with the provided message, and pushes to the remote repository if one exists.
     
     Parameters:
         repo_dir (str): Path to the local Git repository.
@@ -26,14 +26,21 @@ def commit_and_push(repo_dir: str, commit_message: str) -> None:
         else:
             print("No changes detected. Nothing to commit.")
 
-        # Push to the remote named 'origin'
-        origin = repo.remote(name='origin')
-        push_info = origin.push()
-        for info in push_info:
-            if info.flags & info.ERROR:
-                print(f"Push failed: {info.summary}")
-            else:
-                print(f"Push succeeded: {info.summary}")
+        # Attempt to push if a remote exists
+        if repo.remotes:
+            # Try to use remote 'origin' if it exists, otherwise use the first available remote
+            remote = repo.remotes.origin if "origin" in repo.remotes else repo.remotes[0]
+            try:
+                push_info = remote.push()
+                for info in push_info:
+                    if info.flags & info.ERROR:
+                        print(f"Push failed: {info.summary}")
+                    else:
+                        print(f"Push succeeded: {info.summary}")
+            except GitCommandError as push_error:
+                print(f"Git push error: {push_error}")
+        else:
+            print("No remote found. Skipping push.")
 
     except GitCommandError as git_error:
         print(f"Git command error: {git_error}")
