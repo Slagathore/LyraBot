@@ -36,6 +36,10 @@ def commit_and_push(repo_dir: str, commit_message: str) -> None:
                     print("Local 'master' branch does not exist. Creating it...")
                     repo.git.checkout('-b', 'master')  # Create and switch to 'master' branch
 
+                # Pull changes from the remote 'master' branch with --allow-unrelated-histories
+                print("Pulling changes from remote 'master' branch...")
+                repo.git.pull(remote.name, 'master', '--allow-unrelated-histories')
+
                 # Check if the remote 'master' branch exists
                 remote_master_exists = any(ref.name == 'refs/heads/master' for ref in remote.refs)
                 
