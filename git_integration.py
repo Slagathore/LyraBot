@@ -10,7 +10,6 @@ def commit_and_push(repo_dir: str, commit_message: str) -> None:
         commit_message (str): The commit message to use.
     """
     try:
-        # Initialize the Repo object for the given directory
         repo = Repo(repo_dir)
     except Exception as e:
         print(f"Error: Unable to locate a Git repository at {repo_dir}. {e}")
@@ -32,12 +31,25 @@ def commit_and_push(repo_dir: str, commit_message: str) -> None:
             # Try to use remote 'origin' if it exists, otherwise use the first available remote
             remote = repo.remotes.origin if "origin" in repo.remotes else repo.remotes[0]
             try:
-                push_info = remote.push()
-                for info in push_info:
-                    if info.flags & info.ERROR:
-                        print(f"Push failed: {info.summary}")
-                    else:
-                        print(f"Push succeeded: {info.summary}")
+                # Check if the local 'master' branch exists
+                if 'master' not in repo.heads:
+                    print("Local 'master' branch does not exist. Creating it...")
+                    repo.git.checkout('-b', 'master')  # Create and switch to 'master' branch
+
+                # Check if the remote 'master' branch exists
+                remote_master_exists = any(ref.name == 'refs/heads/master' for ref in remote.refs)
+                
+                if not remote_master_exists:
+                    print("Remote 'master' branch does not exist. Creating it...")
+                    repo.git.push(remote.name, 'master:master', '--set-upstream')
+                else:
+                    # Push changes
+                    push_info = remote.push()
+                    for info in push_info:
+                        if info.flags & info.ERROR:
+                            print(f"Push failed: {info.summary}")
+                        else:
+                            print(f"Push succeeded: {info.summary}")
             except GitCommandError as push_error:
                 print(f"Git push error: {push_error}")
         else:
