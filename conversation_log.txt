@@ -1,0 +1,6 @@
+User: log convo
+Bot: Your response logic here
+
+User: log convo
+Bot: Your response logic here
+

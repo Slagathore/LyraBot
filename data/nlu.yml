@@ -17,6 +17,11 @@ nlu:
     - goodevening
     - good afternoon
 
+- intent: log_conversation
+  examples: |
+    - log conversation
+    - log convo
+    
 - intent: goodbye
   examples: |
     - cu

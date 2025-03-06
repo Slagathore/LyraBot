@@ -105,6 +105,8 @@ dependencies = [
     # Additional utilities for agents and chaining
     "cachetools",
     "databases",      # Async database access (if you plan on using async frameworks)
+    "sentence-transformers (==2.2.2)",
+    "huggingface-hub (==0.16.4)",
 ]
 
 [[tool.poetry.packages]]

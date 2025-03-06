@@ -10,6 +10,7 @@ def commit_and_push(repo_dir: str, commit_message: str) -> None:
         commit_message (str): The commit message to use.
     """
     try:
+        # Initialize the Repo object for the given directory
         repo = Repo(repo_dir)
     except Exception as e:
         print(f"Error: Unable to locate a Git repository at {repo_dir}. {e}")
@@ -50,6 +51,6 @@ def commit_and_push(repo_dir: str, commit_message: str) -> None:
 # Example usage:
 if __name__ == "__main__":
     # Replace with your local repository path and commit message
-    repository_path = os.path.abspath(".")  # Assuming current directory is the repo
-    message = "Automated commit from my integration module."
+    repository_path = r"G:\AI\Lyra"  # Path to your local repository
+    message = "Automated commit from git_integration.py"
     commit_and_push(repository_path, message)

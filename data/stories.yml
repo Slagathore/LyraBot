@@ -29,8 +29,13 @@ stories:
   - intent: deny
   - action: utter_goodbye
   
+
+- story:  Log conversation story
+  steps:
+  - intent: log_conversation
+  - action: action_log_conversation
+
 - story:  OpenAI Chat Story
   steps:
   - intent: ask_openai
   - action: action_openai_chat
-  
