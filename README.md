@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Lyra
 A conversational AI with recursive memory, multi-modal capabilities, and self-improvement.
 
@@ -10,3 +11,17 @@ A conversational AI with recursive memory, multi-modal capabilities, and self-im
 1. Clone the repo:
    ```bash
    git clone https://github.com/your-username/your-repo-name.git"# LyraBot" 
+=======
+# Lyra
+A conversational AI with recursive memory, multi-modal capabilities, and self-improvement.
+
+## Features
+- **Memory**: FAISS for long-term memory.
+- **LLM**: Vicuna for uncensored text generation.
+- **Personality**: Dynamic mood and OCEAN traits.
+
+## Setup
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/your-username/your-repo-name.git"# LyraBot" 
+>>>>>>> 0a345c902b14c7e6757190231104b7e4bd2e2c00

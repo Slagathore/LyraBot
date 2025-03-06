@@ -38,7 +38,13 @@ def commit_and_push(repo_dir: str, commit_message: str) -> None:
 
                 # Pull changes from the remote 'master' branch with --allow-unrelated-histories
                 print("Pulling changes from remote 'master' branch...")
-                repo.git.pull(remote.name, 'master', '--allow-unrelated-histories')
+                pull_output = repo.git.pull(remote.name, 'master', '--allow-unrelated-histories')
+
+                # Check if there are merge conflicts
+                if "CONFLICT" in pull_output:
+                    print("Merge conflict detected. Please resolve the conflicts manually.")
+                    print("After resolving conflicts, stage the files and run the script again.")
+                    return
 
                 # Check if the remote 'master' branch exists
                 remote_master_exists = any(ref.name == 'refs/heads/master' for ref in remote.refs)
