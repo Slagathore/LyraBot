@@ -4,3 +4,9 @@ Bot: Your response logic here
 User: log convo
 Bot: Your response logic here
 
+User: log
+Bot: Your response logic here
+
+User: log it
+Bot: Your response logic here
+

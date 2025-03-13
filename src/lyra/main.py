@@ -1,10 +1,16 @@
-from memory_manager import init_db, log_conversation
-from openai_integration import get_openai_response
+from lyra.memory_manager import init_db, log_conversation
+from lyra.openai_integration import get_openai_response
+from lyra.combined_memory_manager import CombinedMemoryManager
+from lyra.ocean import PersonalityEngine
 
 def main():
     # Initialize the database if not already initialized
     init_db()
     
+    # Initialize memory and personality
+    memory_manager = CombinedMemoryManager()
+    personality_engine = PersonalityEngine()
+
     print("Lyra is online. Start your conversation:")
     while True:
         user_input = input("You: ")
@@ -13,11 +19,12 @@ def main():
             break
         
         # Generate a response using GPT-4o latest model
-        bot_response = get_openai_response(user_input, model="chatgpt-4o-latest")
+        personality_context = personality_engine.get_personality_context()
+        bot_response = get_openai_response(f"{personality_context}\nUser: {user_input}\nBot:", model="chatgpt-4o-latest")
         print("Lyra:", bot_response)
         
         # Log the conversation for long-term memory
-        log_conversation(user_input, bot_response)
+        memory_manager.add_memory(user_input, bot_response, personality_context)
 
 if __name__ == "__main__":
     main()

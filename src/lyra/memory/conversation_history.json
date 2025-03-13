@@ -1,0 +1,18 @@
+[
+  {
+    "user": "Hello",
+    "bot": "Hi there!"
+  },
+  {
+    "user": "How are you?",
+    "bot": "I'm doing well, thanks!"
+  },
+  {
+    "user": "Hello",
+    "bot": "Hi there!"
+  },
+  {
+    "user": "How are you?",
+    "bot": "I'm doing well, thanks!"
+  }
+]

@@ -11,3 +11,8 @@ rules:
   steps:
   - intent: bot_challenge
   - action: utter_iamabot
+  
+- rule: Log conversation after each message
+  steps:
+  - intent: log_conversation
+  - action: action_log_conversation

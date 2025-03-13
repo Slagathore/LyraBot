@@ -9,18 +9,24 @@ nlu:
     - hello there
     - good morning
     - good evening
-    - moin
+    - morning
     - hey there
     - let's go
     - hey dude
     - goodmorning
     - goodevening
     - good afternoon
+    - whats up?
+    - yo
+    - sup
+    
+    
 
 - intent: log_conversation
   examples: |
     - log conversation
     - log convo
+    - log add
     
 - intent: goodbye
   examples: |
@@ -34,6 +40,8 @@ nlu:
     - see you around
     - bye bye
     - see you later
+    - cya
+    
 
 - intent: affirm
   examples: |
@@ -43,6 +51,11 @@ nlu:
     - of course
     - that sounds good
     - correct
+    - yep
+    - yepper
+    - yesum
+    - mmhmm
+    
 
 - intent: deny
   examples: |
@@ -53,6 +66,8 @@ nlu:
     - don't like that
     - no way
     - not really
+    - nu uh
+    
 
 - intent: mood_great
   examples: |
@@ -70,6 +85,9 @@ nlu:
     - so so perfect
     - so good
     - so perfect
+    - awesome
+    - fantastic
+    
 
 - intent: mood_unhappy
   examples: |
@@ -87,13 +105,55 @@ nlu:
     - extremly sad
     - so saad
     - so sad
-
+    - bad
+    - rough
+    
 - intent: bot_challenge
   examples: |
     - are you a bot?
     - are you a human?
     - am I talking to a bot?
     - am I talking to a human?
+    
+- intent: ask_about_memory
+  examples: |
+    - What do you remember?
+    - Tell me about our past conversations.
+    - Do you remember what we talked about?
+    - Can you recall our previous chats?
+    - What’s in your memory?
+    - Do you remember me?
+    - What do you know about me?
+    - Can you tell me what we discussed before?
+    - What’s in your memory bank?
+    - Do you have any memories of me?
+
+- intent: ask_about_personality
+  examples: |
+    - What’s your personality like?
+    - Tell me about your personality.
+    - How would you describe yourself?
+    - What kind of AI are you?
+    - Are you friendly?
+    - Are you creative?
+    - Are you organized?
+    - What makes you unique?
+    - What are your traits?
+    - How do you behave?
+
+- intent: ask_about_goals
+  examples: |
+    - What are your goals?
+    - What do you want to achieve?
+    - What’s your purpose?
+    - Why were you created?
+    - What’s your mission?
+    - What do you aim to do?
+    - What are you trying to accomplish?
+    - What’s your main objective?
+    - What’s your end goal?
+    - What’s your ultimate goal?
+
 - intent: ask_openai
   examples: |
     - openai story? tell me something?

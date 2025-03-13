@@ -14,7 +14,10 @@ def get_openai_response(prompt: str, model="chatgpt-4o-latest", max_tokens=150, 
     try:
         response = client.chat.completions.create(
             model=model,
-            messages=[{"role": "user", "content": prompt}],
+            messages=[
+                {"role": "system", "content": "You are Lyra, a friendly and intelligent AI assistant."},
+                {"role": "user", "content": prompt}
+            ],
             max_tokens=max_tokens,
             temperature=temperature
         )

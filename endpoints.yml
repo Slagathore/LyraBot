@@ -16,6 +16,10 @@ action_endpoint:
 # Tracker store which is used to store the conversations.
 # By default the conversations are stored in memory.
 # https://rasa.com/docs/rasa/tracker-stores
+tracker_store:
+    type: SQL
+    dialect: "sqlite"
+    db: conversation_tracker.db
 
 #tracker_store:
 #    type: redis
@@ -40,3 +44,7 @@ action_endpoint:
 #  username: username
 #  password: password
 #  queue: queue
+
+server:
+  port: 5006
+

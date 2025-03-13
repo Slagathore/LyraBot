@@ -10,6 +10,9 @@ intents:
   - bot_challenge
   - ask_openai
   - log_conversation
+  - ask_about_memory
+  - ask_about_personality
+  - ask_about_goals
 
 responses:
   utter_greet:
@@ -30,6 +33,15 @@ responses:
 
   utter_iamabot:
   - text: "I am a bot, powered by Rasa."
+
+  utter_ask_about_memory:
+  - text: "I remember our previous conversations. What would you like to know?"
+
+  utter_ask_about_personality:
+  - text: "I’m designed to be curious and helpful. How can I assist you today?"
+
+  utter_ask_about_goals:
+  - text: "My goal is to learn and improve over time. What’s on your mind?"
 
 actions:
   - action_openai_chat

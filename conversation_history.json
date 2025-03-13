@@ -1,32 +1,20 @@
 [
-  {
-    "user": "Hello",
-    "bot": "Hi there!"
-  },
-  {
-    "user": "How are you?",
-    "bot": "I'm doing well, thanks!"
-  },
-  {
-    "user": "Hello, how are you?",
-    "bot": "I'm good, thanks!"
-  },
-  {
-    "user": "Tell me a story.",
-    "bot": "Once upon a time, there was a brave knight..."
-  },
-  {
-    "user": "hello, how is openai today?",
-    "bot": "Hello! OpenAI is doing great—always working on improving AI models and assisting users like you. How can I help you today? 😊"
-  },
-  {
-    "user": "openai please log this conversation",
-    "bot": "As an AI language model, I don’t have the ability to log or store conversations once this chat ends. Each interaction is independent, and I do not retain any memory of past conversations. If you need to keep a record of this chat, you can manually save it on your device. Let me know how I can assist you! 😊"
-  },
-  {
-    "user": "openai?",
-    "bot": "Yes, this is OpenAI's assistant! How can I help you today? 😊",
-    "timestamp": "2025-03-04T16:31:46.116598",
-    "conversation_id": null
-  }
+    {
+        "user": "my name is Cole. this is an important message.",
+        "bot": "Got it, Cole! I'm listening\u2014what's the important message?",
+        "timestamp": "2025-03-13T03:11:36.091960",
+        "conversation_id": null,
+        "tags": [
+            "important"
+        ],
+        "sentiment": {
+            "polarity": 0.4,
+            "subjectivity": 1.0
+        }
+    },
+    {
+        "user": "log it",
+        "bot": "Your response logic here",
+        "timestamp": ""
+    }
 ]
