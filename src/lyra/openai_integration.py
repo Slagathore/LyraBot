@@ -3,7 +3,7 @@ from openai import OpenAI, OpenAIError
 
 # Retrieve the API key from the environment variable "OPENAI_API_KEY"
 # Fallback to your provided key if the environment variable is not set
-API_KEY = os.getenv("OPENAI_API_KEY", "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")
+API_KEY = os.getenv("OPENAI_API_KEY")
 
 client = OpenAI(api_key=API_KEY)
 
