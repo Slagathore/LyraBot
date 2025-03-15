@@ -1,5 +1,5 @@
 # Lyra
-A conversational AI with recursive memory, multi-modal capabilities, and self-improvement.
+A conversational AI with long-term + emotional + contextually sensitive memory, multi-modal capabilities, many different skills to interact + help the user, curious thought, ability to learn modules on the go, and finally with full self driven self-improvement through recursive feedback looping + AI buddy system.
 
 ## Features
 - **Memory**: FAISS for long-term memory.
