@@ -2,32 +2,54 @@ version: "3.1"
 
 stories:
 
-- story: happy path
+- story: Interactive conversation with OpenAI (general)
   steps:
   - intent: greet
   - action: utter_greet
-  - intent: mood_great
-  - action: utter_happy
+  - intent: ask_openai
+  - action: action_openai_chat
+  - intent: affirm
+  - action: action_openai_chat
 
-- story: sad path 1
+- story: User feeling unhappy
   steps:
-  - intent: greet
-  - action: utter_greet
   - intent: mood_unhappy
   - action: utter_cheer_up
   - action: utter_did_that_help
   - intent: affirm
   - action: utter_happy
 
-- story: sad path 2
+- story: User feeling great
   steps:
-  - intent: greet
-  - action: utter_greet
-  - intent: mood_unhappy
-  - action: utter_cheer_up
-  - action: utter_did_that_help
-  - intent: deny
-  - action: utter_goodbye
+  - intent: mood_great
+  - action: utter_happy
+
+- story: Curious user exploring topic deeply
+  steps:
+  - intent: ask_openai
+  - action: action_openai_chat
+  - intent: explore_further
+  - action: action_openai_chat
+
+- story: Conversation with clarification
+  steps:
+    - intent: clarification
+    - action: utter_clarification  # Fix this line
+    - intent: affirm
+    - action: action_openai_chat
+
+- story: User explicitly asks to log an important message
+  steps:
+  - intent: affirm
+    user: |
+      .*important.*
+  - action: action_log_conversation
+  - action: action_openai_chat
+
+- story: Bot challenged by user
+  steps:
+  - intent: bot_challenge
+  - action: utter_iamabot
 
 - story: log conversation story
   steps:
@@ -53,3 +75,35 @@ stories:
   steps:
   - intent: ask_about_goals
   - action: utter_ask_about_goals
+
+  # Story 1: User expresses NSFW interest, and the bot responds
+- story: respond to nsfw interest
+  steps:
+    - intent: express_nsfw_interest
+    - action: utter_express_nsfw_interest
+    - action: action_openai_chat
+    - action: action_log_conversation
+
+# Story 2: User asks to explore a topic, and the bot responds
+- story: respond to explore topic
+  steps:
+    - intent: explore_topic
+    - action: utter_explore_topic
+
+# Story 3: User asks something out of scope, and the bot responds
+- story: respond to out of scope
+  steps:
+    - intent: out_of_scope
+    - action: utter_out_of_scope
+
+# Story 4: User thanks the bot, and the bot responds
+- story: respond to thanks
+  steps:
+    - intent: thank
+    - action: utter_thanks
+
+# Story 5: User asks for help, and the bot responds
+- story: respond to help
+  steps:
+    - intent: help
+    - action: utter_help

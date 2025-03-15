@@ -7,7 +7,11 @@ echo Committing and pushing to GitHub...
 cd /d %~dp0
 
 :: Open a new Command Prompt window to execute Git commands
-start cmd /k "git add . && git commit -m \"Automated commit\" && git push origin main && exit"
+start cmd /k 
+"git add .
+git commit -m "Automated commit"
+git push origin master
+exit"
 
 echo Done! Your repo has been pushed to GitHub.
 exit

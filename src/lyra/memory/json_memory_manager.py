@@ -1,28 +1,31 @@
 import json
 import os
+from typing import List, Dict, Any, Optional
 
 class JSONMemoryManager:
     def __init__(self, file_path="conversation_history.json"):
         """
-        Initializes the JSON memory manager.
-        
+        Initializes the JSON memory manager, aiming for human-like curiosity and detailed memory tracking.
+
         Parameters:
             file_path (str): Path to the JSON file used for persisting conversation history.
         """
-        self.file_path = file_path
-        self.memory = []
+        base_dir = os.path.join(os.getcwd(), "src", "lyra", "memory")
+        self.file_path = os.path.join(base_dir, file_path)
         self.load_memory()
 
-    def load_memory(self):
+    def load_memory(self) -> None:
         """
-        Loads conversation history from the file if it exists.
+        Loads conversation history from the JSON file.
         """
         if os.path.exists(self.file_path):
             try:
                 with open(self.file_path, "r", encoding="utf-8") as f:
                     self.memory = json.load(f)
+                    if not isinstance(self.memory, list):
+                        self.memory = []
             except Exception as e:
-                print("Error loading memory:", e)
+                print(f"Error loading memory: {e}")
                 self.memory = []
         else:
             self.memory = []
@@ -33,47 +36,47 @@ class JSONMemoryManager:
         """
         try:
             with open(self.file_path, "w", encoding="utf-8") as f:
-                json.dump(self.memory, f, ensure_ascii=False, indent=2)
+                json.dump(self.memory, f, indent=4, ensure_ascii=False)
         except Exception as e:
-            print("Error saving memory:", e)
+            print(f"Error saving memory: {e}")
 
-    def add_memory(self, entry):
+    def add_memory(self, entry: Dict[str, Any]) -> None:
         """
-        Adds a new conversation entry to memory and persists it.
-        
+        Adds a new conversation entry to memory and persists it. Ensures tags and sentiment are always present.
+
         Parameters:
-            entry (dict): A dictionary representing a conversation turn (e.g., {"user": "...", "bot": "..."}).
+            entry (dict): A dictionary representing a conversation turn
+                          (e.g., {"user": "...", "bot": "...", "tags": ["important"],
+                                  "sentiment": {"polarity": 0.0, "subjectivity": 0.0}}).
         """
+        if "tags" not in entry:
+            entry["tags"] = []
+        if "sentiment" not in entry:
+            entry["sentiment"] = {"polarity": 0.0, "subjectivity": 0.0}
+
         self.memory.append(entry)
         self.save_memory()
 
-    def get_memory(self):
+    def get_memory(self) -> List[Dict[str, Any]]:
         """
         Retrieves the entire conversation history.
-        
-        Returns:
-            list: A list of conversation entries.
         """
         return self.memory
 
-    def clear_memory(self):
+    def get_tagged_memory(self, tag: str) -> List[Dict[str, Any]]:
         """
-        Clears all conversation history and updates the file.
+        Retrieves memory entries filtered by a specific tag.
+
+        Parameters:
+            tag (str): The tag to filter entries by.
         """
-        self.memory = []
-        self.save_memory()
+        return [entry for entry in self.memory if tag in entry.get("tags", [])]
 
+    def get_recent_memory(self, num_entries: int = 5) -> List[Dict[str, Any]]:
+        """
+        Retrieves a specified number of the most recent conversation entries.
 
-# Example usage:
-if __name__ == "__main__":
-    mm = JSONMemoryManager("conversation_history.json")
-    
-    # Add sample conversation entries
-    mm.add_memory({"user": "Hello", "bot": "Hi there!"})
-    mm.add_memory({"user": "How are you?", "bot": "I'm doing well, thanks!"})
-    
-    # Retrieve and print conversation history
-    history = mm.get_memory()
-    print("Current Conversation History:")
-    for entry in history:
-        print(f"User: {entry.get('user')}\nBot: {entry.get('bot')}\n")
+        Parameters:
+            num_entries (int): Number of recent entries to retrieve.
+        """
+        return self.memory[-num_entries:]

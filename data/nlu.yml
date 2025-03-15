@@ -9,153 +9,127 @@ nlu:
     - hello there
     - good morning
     - good evening
-    - morning
     - hey there
-    - let's go
-    - hey dude
-    - goodmorning
-    - goodevening
-    - good afternoon
-    - whats up?
     - yo
-    - sup
-    
-    
+    - what's up
 
-- intent: log_conversation
-  examples: |
-    - log conversation
-    - log convo
-    - log add
-    
 - intent: goodbye
   examples: |
-    - cu
-    - good by
-    - cee you later
-    - good night
-    - bye
     - goodbye
-    - have a nice day
-    - see you around
-    - bye bye
     - see you later
-    - cya
-    
+    - bye
+    - later
+    - talk later
 
 - intent: affirm
   examples: |
     - yes
-    - y
-    - indeed
-    - of course
-    - that sounds good
     - correct
-    - yep
-    - yepper
-    - yesum
-    - mmhmm
-    
+    - absolutely
+    - sure
+    - definitely
 
 - intent: deny
   examples: |
     - no
-    - n
-    - never
-    - I don't think so
-    - don't like that
-    - no way
+    - nope
     - not really
-    - nu uh
-    
+    - don't think so
+    - nevermind
 
 - intent: mood_great
   examples: |
-    - perfect
-    - great
-    - amazing
-    - feeling like a king
-    - wonderful
-    - I am feeling very good
-    - I am great
-    - I am amazing
-    - I am going to save the world
-    - super stoked
-    - extremely good
-    - so so perfect
-    - so good
-    - so perfect
-    - awesome
+    - I'm feeling great
     - fantastic
-    
+    - amazing
+    - I'm good
+    - doing well
 
 - intent: mood_unhappy
   examples: |
-    - my day was horrible
-    - I am sad
-    - I don't feel very well
-    - I am disappointed
-    - super sad
-    - I'm so sad
+    - I'm feeling bad
     - sad
-    - very sad
     - unhappy
-    - not good
-    - not very good
-    - extremly sad
-    - so saad
-    - so sad
-    - bad
-    - rough
-    
-- intent: bot_challenge
-  examples: |
-    - are you a bot?
-    - are you a human?
-    - am I talking to a bot?
-    - am I talking to a human?
-    
-- intent: ask_about_memory
-  examples: |
-    - What do you remember?
-    - Tell me about our past conversations.
-    - Do you remember what we talked about?
-    - Can you recall our previous chats?
-    - What’s in your memory?
-    - Do you remember me?
-    - What do you know about me?
-    - Can you tell me what we discussed before?
-    - What’s in your memory bank?
-    - Do you have any memories of me?
-
-- intent: ask_about_personality
-  examples: |
-    - What’s your personality like?
-    - Tell me about your personality.
-    - How would you describe yourself?
-    - What kind of AI are you?
-    - Are you friendly?
-    - Are you creative?
-    - Are you organized?
-    - What makes you unique?
-    - What are your traits?
-    - How do you behave?
-
-- intent: ask_about_goals
-  examples: |
-    - What are your goals?
-    - What do you want to achieve?
-    - What’s your purpose?
-    - Why were you created?
-    - What’s your mission?
-    - What do you aim to do?
-    - What are you trying to accomplish?
-    - What’s your main objective?
-    - What’s your end goal?
-    - What’s your ultimate goal?
+    - feeling down
+    - not so good
 
 - intent: ask_openai
   examples: |
-    - openai story? tell me something?
-    - can you tell me an interesting story?
-    - give me an openai generated response
+    - what is openai
+    - tell me about openai
+    - give me info on openai
+    - what's openai about?
+
+- intent: explore_topic
+  examples: |
+    - can we discuss [AI technology](topic)?
+    - let's talk about [quantum computing](topic)
+    - tell me more about [biology](topic)
+
+- intent: express_nsfw_interest
+  examples: |
+    - can we talk NSFW?
+    - let's get spicy
+    - I'm curious about something explicit
+    - do you handle NSFW topics?
+
+- intent: log_conversation
+  examples: |
+    - log this please
+    - save our conversation
+    - log this chat
+    - keep track of this conversation
+
+- intent: ask_about_personality
+  examples: |
+    - describe your personality
+    - tell me about yourself
+    - who are you exactly?
+
+- intent: ask_about_goals
+  examples: |
+    - what's your goal?
+    - what are you trying to achieve?
+    - what is your purpose?
+
+- intent: ask_about_memory
+  examples: |
+    - what do you remember?
+    - recall our last conversation
+    - do you remember?
+
+- intent: clarification
+  examples: |
+    - can you clarify?
+    - explain that better please
+    - I'm confused
+    - what do you mean?
+
+- intent: thank
+  examples: |
+    - thanks
+    - thank you
+    - I appreciate it
+    - much appreciated
+    - thx
+
+- intent: bot_challenge
+  examples: |
+    - are you a bot?
+    - am I talking to a real person?
+    - you're AI, right?
+
+- intent: explore_further
+  examples: |
+    - tell me more
+    - go deeper
+    - elaborate
+    - can you expand on that?
+
+- intent: help
+  examples: |
+    - help
+    - I need help
+    - can you help me?
+    - what can you do?
+
