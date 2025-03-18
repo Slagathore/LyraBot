@@ -1,60 +1,82 @@
-import faiss
+"""
+FAISS Memory Manager for storing and retrieving embeddings
+"""
+
+import os
+import json
 import numpy as np
-from sklearn.metrics.pairwise import cosine_similarity
+from typing import Dict, List, Any, Optional, Tuple
+import faiss
+from pathlib import Path
 
 class FAISSMemoryManager:
     def __init__(self, dim: int = 384, index_file: str = "faiss_index.bin"):
         """
-        Initializes a FAISS index for embeddings.
-
-        Parameters:
-            dim (int): The dimension of the embeddings.
-            index_file (str): File path to save/load the index.
+        Initialize FAISS memory manager.
+        
+        Args:
+            dim: Dimension of the embedding vectors
+            index_file: Path to the FAISS index file
         """
         self.dim = dim
-        self.index_file = index_file
-        self.index = faiss.IndexFlatL2(dim)
+        self.index_file = Path(index_file)
         self.metadata = []
-
+        
+        # Create directory if it doesn't exist
+        os.makedirs(os.path.dirname(self.index_file) if os.path.dirname(self.index_file) else ".", exist_ok=True)
+        
+        # Create or load the index
+        if self.index_file.exists():
+            self.load_index()
+        else:
+            self.index = faiss.IndexFlatL2(dim)  # L2 distance index
+            print(f"Created new FAISS index with dimension {dim}")
+    
     def add_embedding(self, embedding: np.ndarray, metadata: dict):
         """
-        Adds an embedding with associated metadata to the FAISS index.
-
-        Parameters:
-            embedding (np.ndarray): A 1D or 2D numpy array representing the embedding.
-            metadata (dict): Additional data (like conversation details) to store alongside the embedding.
+        Add embedding vector with associated metadata to the index.
+        
+        Args:
+            embedding: The embedding vector
+            metadata: Associated metadata dict
         """
-        if embedding.ndim == 1:
+        # Ensure the embedding is the right shape and type
+        if len(embedding.shape) == 1:
             embedding = embedding.reshape(1, -1)
-        assert embedding.shape[1] == self.dim, f"Embedding dimension {embedding.shape[1]} does not match FAISS index dimension {self.dim}"
-        faiss.normalize_L2(embedding)
+        embedding = embedding.astype(np.float32)
+        
+        # Add to the index
         self.index.add(embedding)
-        metadata['embedding'] = embedding  # Add embedding to metadata
+        
+        # Store metadata
+        metadata["index"] = self.index.ntotal - 1
         self.metadata.append(metadata)
-
+        
+        return self.index.ntotal - 1
+        
     def search(self, query_embedding: np.ndarray, k: int = 5):
         """
-        Searches for the top-k similar embeddings in the FAISS index.
-
-        Parameters:
-            query_embedding (np.ndarray): A 1D or 2D numpy array representing the query embedding.
-            k (int): Number of nearest neighbors to retrieve.
-
+        Search for similar vectors in the index.
+        
+        Args:
+            query_embedding: Query vector
+            k: Number of results to return
+            
         Returns:
-            distances, results: Distances and a list of metadata corresponding to the nearest embeddings.
+            Tuple of (distances, results)
         """
-        if query_embedding.ndim == 1:
-            query_embedding = query_embedding.reshape(1, -1)
-        assert query_embedding.shape[1] == self.dim, f"Query embedding dimension {query_embedding.shape[1]} does not match FAISS index dimension {self.dim}"
-        faiss.normalize_L2(query_embedding)
-        distances, indices = self.index.search(query_embedding, k)
-
-        # Handle empty index
         if self.index.ntotal == 0:
             return [], []
-
-        # Debugging: Print indices and metadata length
-        print(f"Indices: {indices}")
+            
+        # Ensure the query is the right shape and type
+        if len(query_embedding.shape) == 1:
+            query_embedding = query_embedding.reshape(1, -1)
+        query_embedding = query_embedding.astype(np.float32)
+        
+        # Search the index
+        k = min(k, self.index.ntotal)  # Don't request more results than we have
+        distances, indices = self.index.search(query_embedding, k)
+        
         print(f"Metadata length: {len(self.metadata)}")
 
         # Ensure indices are within bounds
@@ -65,45 +87,90 @@ class FAISSMemoryManager:
             else:
                 results.append({})  # Fallback for out-of-range indices
 
-        return distances, results
-
+        return distances[0].tolist(), results
+        
     def deduplicate_entries(self, entries, threshold=0.95):
         """
-        Removes duplicate entries based on cosine similarity.
-
-        Parameters:
-            entries (list): List of metadata entries.
-            threshold (float): Similarity threshold for deduplication.
-
+        Remove duplicate entries based on content similarity.
+        
+        Args:
+            entries: List of entries to deduplicate
+            threshold: Similarity threshold
+            
         Returns:
-            list: List of unique entries.
+            Deduplicated list of entries
         """
-        unique_entries = []
+        if not entries:
+            return []
+            
+        # Simple deduplication - remove entries with same user message
+        seen = set()
+        unique = []
+        
         for entry in entries:
-            is_duplicate = False
-            for unique_entry in unique_entries:
-                # Compare embeddings using cosine similarity
-                similarity = cosine_similarity(
-                    [entry['embedding']], [unique_entry['embedding']]
-                )[0][0]
-                if similarity > threshold:
-                    is_duplicate = True
-                    break
-            if not is_duplicate:
-                unique_entries.append(entry)
-        return unique_entries
-
+            user_msg = entry.get("user", "")
+            
+            # Skip if empty or already seen
+            if not user_msg or user_msg in seen:
+                continue
+                
+            seen.add(user_msg)
+            unique.append(entry)
+            
+        return unique
+        
     def save_index(self):
-        """
-        Saves the FAISS index to a file.
-        """
-        faiss.write_index(self.index, self.index_file)
-
-    def load_index(self):
-        """
-        Loads the FAISS index from a file.
-        """
+        """Save the FAISS index and metadata to disk"""
+        if not hasattr(self, 'index') or self.index is None:
+            print("No index to save")
+            return
+            
         try:
-            self.index = faiss.read_index(self.index_file)
+            # Save the FAISS index
+            faiss.write_index(self.index, str(self.index_file))
+            
+            # Save the metadata
+            metadata_file = self.index_file.with_suffix(".json")
+            with open(metadata_file, "w", encoding="utf-8") as f:
+                json.dump(self.metadata, f, ensure_ascii=False, indent=2)
+                
+            print(f"Saved index with {self.index.ntotal} entries")
         except Exception as e:
-            print("Could not load FAISS index:", e)
+            print(f"Error saving index: {e}")
+            
+    def load_index(self):
+        """Load the FAISS index and metadata from disk"""
+        try:
+            # Load the FAISS index
+            self.index = faiss.read_index(str(self.index_file))
+            
+            # Load the metadata
+            metadata_file = self.index_file.with_suffix(".json")
+            if metadata_file.exists():
+                with open(metadata_file, "r", encoding="utf-8") as f:
+                    self.metadata = json.load(f)
+            else:
+                # If no metadata file exists, create empty metadata
+                self.metadata = [{} for _ in range(self.index.ntotal)]
+                
+            print(f"Loaded index with {self.index.ntotal} entries and {len(self.metadata)} metadata entries")
+        except Exception as e:
+            print(f"Error loading index: {e}")
+            # Create a new index as fallback
+            self.index = faiss.IndexFlatL2(self.dim)
+            self.metadata = []
+
+if __name__ == "__main__":
+    # Test the FAISS memory manager
+    manager = FAISSMemoryManager()
+    
+    # Add a test embedding
+    test_vec = np.random.rand(384).astype(np.float32)
+    manager.add_embedding(test_vec, {"text": "This is a test"})
+    
+    # Search for similar vectors
+    distances, results = manager.search(test_vec, k=1)
+    print(f"Search results: {results}")
+    
+    # Save the index
+    manager.save_index()

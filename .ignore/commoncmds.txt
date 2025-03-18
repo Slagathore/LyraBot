@@ -1,0 +1,4 @@
+poetry run rasa run --enable-api --debug
+poetry run rasa run actions
+poetry run rasa run train
+poetry run rasa shell

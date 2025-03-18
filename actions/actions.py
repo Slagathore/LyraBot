@@ -4,12 +4,65 @@ import traceback
 from typing import Any, Text, Dict, List
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
-from lyra.openai_integration import get_openai_response
+# Update the import to use local LLM
+from lyra.huggingface_integration import get_huggingface_response as get_response
 from lyra.combined_memory_manager import CombinedMemoryManager
 from lyra.ocean import PersonalityEngine
 from lyra.memory.sql_memory_manager import log_conversation
 from datetime import datetime
 from textblob import TextBlob
+import re
+
+def detect_tags(text: str) -> List[str]:
+    """
+    Enhanced tag detection to categorize conversation content beyond just 'important'.
+    This allows Lyra to better organize memories and retrieve relevant context.
+    """
+    tags = []
+    
+    # Content importance tags
+    if re.search(r'\b(important|remember|don\'t forget|note this|save this)\b', text.lower()):
+        tags.append("important")
+    if re.search(r'\b(urgent|emergency|immediate|asap|right now)\b', text.lower()):
+        tags.append("urgent")
+        
+    # Conversation type tags
+    if re.search(r'\b(help|assist|how to|how do|can you show|explain)\b', text.lower()):
+        tags.append("help_request")
+    if re.search(r'\b(code|program|script|function|class|bug|error|debug)\b', text.lower()):
+        tags.append("technical")
+    if re.search(r'\b(philosophy|meaning|life|existence|consciousness)\b', text.lower()):
+        tags.append("philosophical")
+        
+    # Emotional content tags
+    if re.search(r'\b(happy|excited|glad|wonderful|amazing)\b', text.lower()):
+        tags.append("positive_emotion")
+    if re.search(r'\b(sad|upset|frustrated|angry|annoyed)\b', text.lower()):
+        tags.append("negative_emotion")
+        
+    # NSFW/Personal content tags
+    if re.search(r'\b(sex|flirt|naughty|kinky|dirty|sexy|hot)\b', text.lower()):
+        tags.append("nsfw")
+    if re.search(r'\b(personal|private|secret|confidential)\b', text.lower()):
+        tags.append("personal")
+        
+    # Knowledge domain tags
+    if re.search(r'\b(chemistry|lab|polymer|hplc|formulation)\b', text.lower()):
+        tags.append("chemistry")
+    if re.search(r'\b(python|javascript|code|programming|algorithm|database)\b', text.lower()):
+        tags.append("programming")
+    if re.search(r'\b(crypto|bitcoin|xrp|market|stock|finance|money)\b', text.lower()):
+        tags.append("finance")
+    if re.search(r'\b(game|rpg|d&d|kingdom death|league|pathfinder)\b', text.lower()):
+        tags.append("gaming")
+    if re.search(r'\b(metal|jewelry|craft|wood|3d print|blacksmith)\b', text.lower()):
+        tags.append("crafting")
+        
+    # Smart home and device tags
+    if re.search(r'\b(light|thermostat|speaker|tv|smart home|device)\b', text.lower()):
+        tags.append("smart_home")
+        
+    return tags
 
 class ActionLogConversation(Action):
     def name(self) -> Text:
@@ -29,9 +82,10 @@ class ActionLogConversation(Action):
             )
             timestamp = datetime.now().isoformat()
 
-            tags = []
-            if "important" in user_message.lower() or "important" in bot_response.lower():
-                tags.append("important")
+            # Enhanced tagging using our new function
+            user_tags = detect_tags(user_message)
+            bot_tags = detect_tags(bot_response)
+            tags = list(set(user_tags + bot_tags))  # Combine and deduplicate
 
             sentiment = TextBlob(user_message).sentiment
             log_entry = {
@@ -60,7 +114,7 @@ class ActionLogConversation(Action):
             with open(log_file_path, "a", encoding="utf-8") as f:
                 f.write(f"{timestamp}\nUser: {user_message}\nBot: {bot_response}\n\n")
 
-            log_conversation(user_message, bot_response)
+            log_conversation(user_message, bot_response, tags=tags)
 
             dispatcher.utter_message(text="Conversation logged successfully!")
 
@@ -89,6 +143,7 @@ class ActionOpenAIChat(Action):
     ) -> List[Dict[Text, Any]]:
         user_message = tracker.latest_message.get("text", "")
 
+        # Memory retrieval is working correctly
         memory_data = self.memory_manager.get_context(user_message, k=3)
         context_entries = memory_data["context"]
         context_summary = memory_data["summary"]
@@ -100,20 +155,30 @@ class ActionOpenAIChat(Action):
         mood = "positive" if sentiment.polarity > 0 else "neutral" if sentiment.polarity == 0 else "negative"
 
         personality_context = f"{self.personality_engine.get_personality_context()}\nCurrent Mood: {mood}"
-        enriched_prompt = f"{personality_context}\n{context_summary}\nContext:\n{context_str}\n\nUser: {user_message}\nBot:"
+        
+        # Get tags from user message to adjust response
+        user_tags = detect_tags(user_message)
+        tag_str = ", ".join(user_tags) if user_tags else "none"
+        
+        # Include tags in prompt to help guide the AI's response
+        enriched_prompt = f"{personality_context}\n{context_summary}\nContext:\n{context_str}\n\nDetected conversation tags: {tag_str}\n\nUser: {user_message}\nBot:"
 
-        response = get_openai_response(enriched_prompt, model="chatgpt-4o-latest")
+        # Use local LLM instead of OpenAI
+        response = get_response(enriched_prompt, context_type="default")
 
         dispatcher.utter_message(text=response)
 
-        tags = []
-        if "important" in user_message.lower() or "important" in response.lower():
-            tags.append("important")
+        # Enhanced tagging for both user message and bot response
+        user_tags = detect_tags(user_message)
+        bot_tags = detect_tags(response)
+        tags = list(set(user_tags + bot_tags))  # Combine and deduplicate
 
+        # Memory updating works properly
         self.memory_manager.add_memory(user_message, response, tags)
 
+        # SQL logging works as backup
         try:
-            log_conversation(user_message, response)
+            log_conversation(user_message, response, tags=tags)
         except Exception as e:
             print("SQL logging error:", e)
 

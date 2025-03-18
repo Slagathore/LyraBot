@@ -1,6 +1,8 @@
-import json
 import os
+import json
 from typing import List, Dict, Any, Optional
+from pathlib import Path
+from datetime import datetime
 
 class JSONMemoryManager:
     def __init__(self, file_path="conversation_history.json"):
@@ -29,54 +31,78 @@ class JSONMemoryManager:
                 self.memory = []
         else:
             self.memory = []
-
+    
     def save_memory(self):
         """
-        Saves the current conversation history to the file.
+        Saves the current memory state to disk.
         """
         try:
+            # Create directory if it doesn't exist
+            os.makedirs(os.path.dirname(self.file_path), exist_ok=True)
+            
             with open(self.file_path, "w", encoding="utf-8") as f:
-                json.dump(self.memory, f, indent=4, ensure_ascii=False)
+                json.dump(self.memory, f, ensure_ascii=False, indent=2)
         except Exception as e:
             print(f"Error saving memory: {e}")
-
+            
     def add_memory(self, entry: Dict[str, Any]) -> None:
         """
-        Adds a new conversation entry to memory and persists it. Ensures tags and sentiment are always present.
-
+        Adds a new memory entry.
+        
         Parameters:
-            entry (dict): A dictionary representing a conversation turn
-                          (e.g., {"user": "...", "bot": "...", "tags": ["important"],
-                                  "sentiment": {"polarity": 0.0, "subjectivity": 0.0}}).
+            entry: Dictionary with memory data (user message, bot response, etc.)
         """
-        if "tags" not in entry:
-            entry["tags"] = []
-        if "sentiment" not in entry:
-            entry["sentiment"] = {"polarity": 0.0, "subjectivity": 0.0}
-
+        # Ensure timestamp exists
+        if "timestamp" not in entry:
+            entry["timestamp"] = datetime.now().isoformat()
+            
         self.memory.append(entry)
         self.save_memory()
-
+        
     def get_memory(self) -> List[Dict[str, Any]]:
         """
-        Retrieves the entire conversation history.
+        Returns all memory entries.
+        
+        Returns:
+            List of all memory entries
         """
         return self.memory
-
+        
     def get_tagged_memory(self, tag: str) -> List[Dict[str, Any]]:
         """
-        Retrieves memory entries filtered by a specific tag.
-
+        Returns memory entries with a specific tag.
+        
         Parameters:
-            tag (str): The tag to filter entries by.
+            tag: Tag to filter by
+            
+        Returns:
+            List of memory entries with the specified tag
         """
         return [entry for entry in self.memory if tag in entry.get("tags", [])]
-
+        
     def get_recent_memory(self, num_entries: int = 5) -> List[Dict[str, Any]]:
         """
-        Retrieves a specified number of the most recent conversation entries.
-
+        Returns the most recent memory entries.
+        
         Parameters:
-            num_entries (int): Number of recent entries to retrieve.
+            num_entries: Number of recent entries to return
+            
+        Returns:
+            List of recent memory entries
         """
-        return self.memory[-num_entries:]
+        return sorted(
+            self.memory, 
+            key=lambda x: x.get("timestamp", ""), 
+            reverse=True
+        )[:num_entries]
+
+if __name__ == "__main__":
+    # Test the memory manager
+    mm = JSONMemoryManager()
+    mm.add_memory({
+        "user": "Hello",
+        "bot": "Hi there!",
+        "tags": ["greeting"]
+    })
+    print(f"Memory contains {len(mm.get_memory())} entries")
+    print(mm.get_recent_memory(1))

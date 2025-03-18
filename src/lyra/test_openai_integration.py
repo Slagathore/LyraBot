@@ -1,3 +1,5 @@
+import sys
+sys.path.append('/g:/AI/Lyra/src/lyra')
 import pytest
 from .openai_integration import get_openai_response, client, OpenAIError
 
@@ -7,21 +9,17 @@ class FakeResponse:
         self.choices = [type("FakeChoice", (), {"message": type("FakeMessage", (), {"content": content})})()]
 
 def fake_success_response(*args, **kwargs):
-    # Return a fake response with predetermined content
     return FakeResponse("Fake Response")
 
 def fake_error_response(*args, **kwargs):
-    # Simulate an API error
     raise OpenAIError("Fake Error: model not found")
 
 def test_valid_response(monkeypatch):
-    # Monkeypatch the client's chat completions create method to return a fake success response
     monkeypatch.setattr(client.chat.completions, "create", fake_success_response)
     response = get_openai_response("Test prompt", model="valid-model")
     assert response == "Fake Response"
 
 def test_error_handling(monkeypatch, capsys):
-    # Monkeypatch to simulate an error in the API call
     monkeypatch.setattr(client.chat.completions, "create", fake_error_response)
     response = get_openai_response("Test prompt", model="invalid-model")
     captured = capsys.readouterr().out

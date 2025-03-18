@@ -20,7 +20,6 @@ rules:
   steps:
   - intent: thank
   - action: utter_thanks
- 
 
 - rule: Handle denials
   steps:
@@ -47,11 +46,6 @@ rules:
   - intent: bot_challenge
   - action: utter_iamabot
 
-- rule: NSFW inquiries
-  steps:
-  - intent: express_nsfw_interest
-  - action: action_openai_chat
-
 - rule: Explore topics dynamically
   steps:
   - intent: explore_topic
@@ -66,7 +60,6 @@ rules:
   steps:
   - intent: ask_openai
   - action: action_openai_chat
-
 
 - rule: Handle great moods
   steps:
@@ -89,26 +82,7 @@ rules:
   - intent: help
   - action: utter_help
 
-# Rule 2: Respond to explore topic
-- rule: respond to explore topic
-  steps:
-  - intent: explore_topic
-  - action: utter_explore_topic
-
-# Rule 3: Respond to out of scope
-- rule: respond to out of scope
+- rule: Respond to out of scope
   steps:
   - intent: out_of_scope
   - action: utter_out_of_scope
-
-# Rule 4: Respond to thanks
-- rule: respond to thanks
-  steps:
-  - intent: thank
-  - action: utter_thanks
-
-# Rule 5: Respond to help
-- rule: respond to help
-  steps:
-  - intent: help
-  - action: utter_help

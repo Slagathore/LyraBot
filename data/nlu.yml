@@ -66,13 +66,6 @@ nlu:
     - let's talk about [quantum computing](topic)
     - tell me more about [biology](topic)
 
-- intent: express_nsfw_interest
-  examples: |
-    - can we talk NSFW?
-    - let's get spicy
-    - I'm curious about something explicit
-    - do you handle NSFW topics?
-
 - intent: log_conversation
   examples: |
     - log this please

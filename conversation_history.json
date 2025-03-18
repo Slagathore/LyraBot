@@ -1,30 +1,13 @@
 [
-    {
-        "user": "log this convo please. and mark this message as important",
-        "bot": "Hey! How are you?",
-        "timestamp": "2025-03-13T07:15:22.790429",
-        "tags": [
-            "important"
-        ],
-        "sentiment": {
-            "polarity": 0.4,
-            "subjectivity": 1.0
-        }
-    }
-]ssion is to ensure that artificial general intelligence (AGI) is safe and aligned with human values.\n\nWhen you say \"important stuff,\" do you mean OpenAI\u2019s recent advancements, ethical considerations, or something else? I'm happy to dive deeper into any aspect you're curious about! \ud83d\ude0a",
-        "timestamp": "2025-03-13T06:48:33.613165",
-        "tags": [],
-        "sentiment": {
-            "polarity": 0.0,
-            "subjectivity": 0.0
-        }
-    }
-]ops advanced AI models, such as ChatGPT (which powers me), to assist with various tasks like answering questions, generating content, and solving complex problems. OpenAI's mission is to ensure that artificial intelligence benefits all of humanity by making AI systems safe, ethical, and widely accessible. The company also explores AI applications in fields like natural language processing, robotics, and machine learning research. Would you like to know more about a specific aspect of OpenAI’s work?",
-    "timestamp": "2025-03-13T06:32:40.567377",
-    "conversation_id": null,
+  {
+    "user": "hi",
+    "bot": "Sorry, I couldn't initialize the language model. Please check your installation.",
+    "timestamp": "2025-03-15T13:11:32.907563",
     "tags": [],
+    "conversation_id": "default",
     "sentiment": {
       "polarity": 0.0,
       "subjectivity": 0.0
-    },
-    "embedding": 
+    }
+  }
+]

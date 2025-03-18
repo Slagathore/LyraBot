@@ -9,7 +9,7 @@ stories:
   - intent: ask_openai
   - action: action_openai_chat
   - intent: affirm
-  - action: action_openai_chat
+  - action: utter_happy
 
 - story: User feeling unhappy
   steps:
@@ -34,17 +34,14 @@ stories:
 - story: Conversation with clarification
   steps:
     - intent: clarification
-    - action: utter_clarification  # Fix this line
+    - action: utter_clarification
     - intent: affirm
-    - action: action_openai_chat
+    - action: utter_happy
 
 - story: User explicitly asks to log an important message
   steps:
-  - intent: affirm
-    user: |
-      .*important.*
+  - intent: log_conversation
   - action: action_log_conversation
-  - action: action_openai_chat
 
 - story: Bot challenged by user
   steps:
@@ -76,19 +73,11 @@ stories:
   - intent: ask_about_goals
   - action: utter_ask_about_goals
 
-  # Story 1: User expresses NSFW interest, and the bot responds
-- story: respond to nsfw interest
-  steps:
-    - intent: express_nsfw_interest
-    - action: utter_express_nsfw_interest
-    - action: action_openai_chat
-    - action: action_log_conversation
-
 # Story 2: User asks to explore a topic, and the bot responds
 - story: respond to explore topic
   steps:
     - intent: explore_topic
-    - action: utter_explore_topic
+    - action: action_openai_chat
 
 # Story 3: User asks something out of scope, and the bot responds
 - story: respond to out of scope
@@ -107,3 +96,64 @@ stories:
   steps:
     - intent: help
     - action: utter_help
+
+- story: User explores a topic
+  steps:
+  - intent: explore_topic
+  - action: action_openai_chat
+
+- story: User thanks the bot
+  steps:
+  - intent: thank
+  - action: utter_thanks
+
+- story: User greets the bot
+  steps:
+  - intent: greet
+  - action: utter_greet
+
+- story: User says goodbye
+  steps:
+  - intent: goodbye
+  - action: utter_goodbye
+
+- story: User affirms
+  steps:
+  - intent: affirm
+  - action: utter_happy
+
+- story: User denies
+  steps:
+  - intent: deny
+  - action: utter_clarification
+
+- story: User asks about personality
+  steps:
+  - intent: ask_about_personality
+  - action: utter_ask_about_personality
+
+- story: User asks about memory
+  steps:
+  - intent: ask_about_memory
+  - action: utter_ask_about_memory
+
+- story: User challenges the bot
+  steps:
+  - intent: bot_challenge
+  - action: utter_iamabot
+
+- story: User asks for help
+  steps:
+  - intent: help
+  - action: utter_help
+
+- story: User is in a great mood
+  steps:
+  - intent: mood_great
+  - action: utter_happy
+
+- story: User is unhappy
+  steps:
+  - intent: mood_unhappy
+  - action: utter_cheer_up
+  - action: utter_did_that_help

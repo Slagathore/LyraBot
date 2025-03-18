@@ -9,7 +9,6 @@ intents:
   - mood_unhappy
   - ask_openai
   - explore_topic
-  - express_nsfw_interest
   - log_conversation
   - ask_about_personality
   - ask_about_goals
@@ -67,10 +66,6 @@ responses:
 
   utter_explore_topic:
     - text: "Lets learn more together!"
-
-  utter_express_nsfw_interest:
-    - text: "Ohh, that's naughty. What do you want to know?"
-    
 
 actions:
   - action_openai_chat

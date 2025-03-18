@@ -1,0 +1,6 @@
+# ...existing code...
+.ignore/
+# Environment variables
+.env
+.env.*
+# ...existing code...
