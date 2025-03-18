@@ -1,0 +1,7 @@
+[lfs]
+	batch = true
+	concurrenttransfers = 8
+	fetchrecentrefsdays = 7
+	fetchrecentcommitsdays = 0
+	fetchrecentremoterefs = true
+	skipdownloaderrors = true

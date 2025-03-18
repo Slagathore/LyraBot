@@ -1,0 +1,84 @@
+.ignore/
+# Environment variables
+.env
+.env.*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+lyra_env/
+venv/
+ENV/
+.env
+.env.*
+
+# Large model files
+*.gguf
+*.safetensors
+*.bin
+*.onnx
+*.pth
+*.pt
+*.ckpt
+*.h5
+*.pb
+*.model
+*.msgpack
+*.mlmodel
+*.weights
+BigModes/**/models/
+
+# Specific large files
+**/torch_cpu.dll
+**/dnnl.lib
+**/torch_*.dll
+**/dnnl*.lib
+**/libtorch*.dll
+**/lib*.so.*
+
+# Android build files
+BigModes/llama.cpp/examples/llama.android/
+BigModes/llama.cpp/examples/.android-disabled
+BigModes/llama.cpp/.noandroid
+
+# Memory and cache files
+memory/
+.ignore/
+__pycache__/
+.cache/
+
+# Generated files
+outputs/
+logs/
+temp/
+build*/
+
+# IDE related files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# System files
+.DS_Store
+Thumbs.db
+/BigModes/llama.cpp/examples/llama.android/ 
